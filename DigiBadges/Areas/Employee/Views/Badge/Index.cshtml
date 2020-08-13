@@ -238,8 +238,9 @@
                                 <hr />
                                 @if (item.IsExpired == false)
                                 {
+                            var urlOfImage = "http://13.90.135.29/" + item.ImageUrl.Replace('\\', '/');
                             <a  data-href="http://digibadge.eastus.cloudapp.azure.com/" data-layout="button_count" data-size="small">
-                                <a title="share badge on facebook" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fdigibadge.eastus.cloudapp.azure.com%2F&amp;src=sdkpreparse">
+                                <a title="share badge on facebook" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@urlOfImage">
                                 Share the badge 
                                 <i class="fa fa-facebook"></i>
                                     </a>
