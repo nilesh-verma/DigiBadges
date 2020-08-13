@@ -1,0 +1,93 @@
+﻿@model List<DigiBadges.Models.UserRoles>
+@{
+    var title = "User Roles";
+    var item = 0;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="userRole">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2>@title</h2>
+                    </div>
+                    @*<div class="col-sm-6">
+                        <a asp-controller="UserRole" asp-action="Create" class="btn btn-success"><i class="material-icons">&#xe147;</i> <span>Add new role</span></a>
+                    </div>*@
+                </div>
+            </div>
+            @if (Model.Count != 0)
+            {
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Items</th>
+                            <th>Roles</th>
+                            <th>Icons</th>
+                            @*<th>Actions</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var roles in Model)
+                        {
+                            item++;
+                            <tr>
+                                <td>@item</td>
+                                <td>@roles.Role</td>
+                                <td>
+                                @switch (roles.Role)
+                                            {
+                                                case "Admin":<img class="userRolesIcon" src="~/img/AdminIconImg.jpg"/>break;
+                                                case "Issuer": <img class="userRolesIcon" src="~/img/IssuerIconImg.jpg"/>break;
+                                                default : <img class="userRolesIcon" src="~/img/EarnerIconImg.jpg" />break;
+
+                                            }
+                                    </td>
+                                @*<td>
+                                    <a asp-controller="UserRole" class="text-primary" asp-action="Edit" asp-route-id="@roles.RoleId"><i class="material-icons" title="Edit">&#xE254;</i></a>
+                                    <a asp-controller="UserRole" class="text-danger" onclick="return confirm('Do you really want to delete @roles.Role ?');" asp-action="Delete" asp-route-id="@roles.RoleId"><i class="material-icons" title="Delete">&#xE872;</i></a>
+                                </td>*@
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-center text-muted">No Roles Found !</p>
+            }
+
+            </div>
+    </div>
+
+    <!-- Delete Modal HTML -->
+    <div id="deleteRoleModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h4 class="modal-title">Delete Role</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete these Role?</p>
+                        <p class="text-warning"><small>This action cannot be undone.</small></p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                        <input type="submit" class="btn btn-danger" value="Delete">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    
+}

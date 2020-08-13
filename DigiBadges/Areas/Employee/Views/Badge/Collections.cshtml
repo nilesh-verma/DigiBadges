@@ -1,0 +1,175 @@
+﻿
+@model DigiBadges.Models.ViewModels.CollectionView
+
+<style>
+    .section {
+        background-color: white;
+        height: 200px;
+        background-color: var(--white);
+    }
+
+    .container2 {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        grid-gap: 20px;
+        padding: 20px
+    }
+    .container {
+        position: relative;
+        font-family: Arial;
+    }
+
+    .text-block {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background-color: transparent;
+        color: white;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+</style>
+
+<div class="section">
+
+    <div class="container">
+        <section style="text-align: left; padding: 20px;">
+            @if (Model.BadgeCollections != null)
+            {
+                @foreach (var m in Model.BadgeCollections)
+                {
+                    <h3 class="page-title mb-0">@m.CollectionName</h3>
+                    <p>@m.CollectionDescription</p>
+                }
+            }
+
+        </section>
+    </div>
+
+</div>
+<hr />
+@if (Model.BackPacks != null)
+{
+<div class="container2" id="ItemList">
+    @foreach (var item in Model.BackPacks)
+    {
+
+        <div class="badge-block">
+            <div class="card" style="width: 28rem; ">
+                @*  <a style=" text-align: right; padding-right: 10px; font-size: 20px;" asp-action="Collections" asp-route-deleteid="@item.badgeid"><i class="fas fa-trash-alt"></i></a>*@
+                <a class="delete-icon" id="Delete" style="border:none"
+                   onclick="deleteBadgeID('@item.badgeid')"
+                   type="button">
+                    <i class="fas fa-trash"></i>
+                </a>
+                <div class="card-body">
+                    @if (item.IsExpired == false)
+                    {
+                        <div class="row">
+
+                            <div class="col-sm-4 badge-img">
+                                <img src="@item.ImageUrl" width="100px" height="150px" />
+                            </div>
+                            <div class="col-8 badge-description">
+                                <h5>@item.BadgeName</h5>
+                                <p>Earning Criteria -@item.earningDescription</p>
+                                <p style="color: blue;">Congratulations , you get a new badge</p>
+
+
+                                <p><b>Given by- @item.IssuerName</b></p>
+
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+
+                            <div class="col-sm-4 container">
+                                <img src="@item.ImageUrl" width="100px" height="150px" />
+                                <div class="text-block">
+                                    <h4>Expired</h4>
+
+                                </div>
+                            </div>
+                            <div class="col-8">
+                                <h5>@item.BadgeName</h5>
+                                <p>Earning Criteria -@item.earningDescription</p>
+                                <p style="color: blue;">This badge is Expired Now</p>
+
+
+                                <p><b>Given by- @item.IssuerName</b></p>
+
+                            </div>
+                        </div>
+                    }
+                    <hr />
+                </div>
+            </div>
+            </div>
+            }
+
+        </div>
+    }
+
+    else
+    {
+
+    <h2 style="text-align:center">You have no badge</h2>
+    }
+
+    <br />
+    <br />
+    <div class="bottom-btn-row">
+        @foreach (var m in Model.BadgeCollections)
+        {
+            <a class="btn btn-secondary " asp-action="Index">Back</a>
+
+            <a class="btn btn-primary" asp-area="Employee" asp-controller="Badge" asp-action="_PopupPartial" asp-route-id="@m.CollectionId">Add Badge</a>
+
+        }
+    </div>
+
+
+
+    @section scripts {
+        <script type="text/javascript">
+            function deleteBadgeID(deleteid) {
+                debugger;
+                swal({
+                    title: "Are you sure?",
+                    text: "Are you sure that you want to delete this badge?",
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Yes, delete it!",
+                    confirmButtonColor: "#ec6c62"
+                },
+                    function () {
+                        $.ajax({
+                            url: "/Employee/Badge/CollectionBadgeDelete",
+                            data:
+                            {
+                                "deleteid": deleteid
+                            },
+                            type: "DELETE"
+                        })
+                            .done(function (data) {
+                                sweetAlert
+                                    ({
+                                        title: "Deleted!",
+                                        text: "Your badge was successfully deleted!",
+                                        type: "success"
+                                    },
+                                        function () {
+                                            window.location.href = "/Employee/Badge/CollectionBadgeDelete";
+                                        });
+                            })
+                            .error(function (data) {
+                                swal("Oops", "We couldn't connect to the server!", "error");
+                            });
+                    });
+            }
+        </script>
+    }
+

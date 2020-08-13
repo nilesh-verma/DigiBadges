@@ -1,0 +1,36 @@
+﻿@page
+@model DigiBadgesNew.Areas.Identity.Pages.Account.verifycodeModel
+@{
+}
+
+@if (TempData["verifycode"] == null)
+{
+    <h2>Acess Denied</h2>
+}
+else
+{
+    <div class="container content_start">
+        <section class="row justify-content-center">
+            <section class="col-md-6">
+
+                <form class="form-container" method="post">
+                    <h3 class="text-center pb-2">Verification Code</h3>
+                    <p class="text-lg-center">
+                        A message with a 6 digit verification code has been sent to <b>@TempData["email"]</b>. Enter the code to continue.
+                    </p>
+                    <div class="form-group  text-center">
+                        <input id="codeBox1" type="number" asp-for="verify.First" class="form-control" onKeyPress="if(this.value.length==1) return false;" />
+                        <input id="codeBox2" type="number" asp-for="verify.Second" class="form-control" onKeyPress="if(this.value.length==1) return false;" />
+                        <input id="codeBox3" type="number" asp-for="verify.Third" class="form-control" onKeyPress="if(this.value.length==1) return false;" />
+                        <input id="codeBox4" type="number" asp-for="verify.Fourth" class="form-control" onKeyPress="if(this.value.length==1) return false;" />
+                        <input id="codeBox3" type="number" asp-for="verify.Fifth" class="form-control" onKeyPress="if(this.value.length==1) return false;" />
+                        <input id="codeBox4" type="number" asp-for="verify.Sixth" class="form-control" onKeyPress="if(this.value.length==1) return false;" />
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-sm btn-primary" asp-route-id=@TempData["verifycode"]>Continue</button>
+                    </div>
+                </form>
+            </section>
+        </section>
+    </div>
+}

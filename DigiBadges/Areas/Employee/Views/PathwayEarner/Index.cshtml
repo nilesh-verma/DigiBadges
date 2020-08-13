@@ -1,0 +1,211 @@
+﻿@model DigiBadges.DataAccess.ViewModels.PathwayVM
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <style>
+        
+        .icon {
+            padding:8px;
+            color: black;
+            min-width: 50px;
+            text-align: center;
+        }
+
+    </style>
+
+@if (Model.pathways.Count() >= 1)
+{
+    <div class="row mt-2 " style="background-color:white;border-radius:5px">
+        <div class="col-3"><p class="float-left m-2"><b>Pathway :</b> @Model.PagingInfo.TotalItems</p></div>
+
+    </div>
+    <br />
+    <br />
+    <div class="text-center"> <h3 style="color:cornflowerblue">Pathway</h3></div>
+    <div class="container" style="border-style: ridge;">
+        <br />
+        <div class="row">
+            <div class="col-md-4" style="padding-left:850px;">
+                <input id="myInput" type="text" placeholder="Search.." class="input-field" style="border-radius:5px">
+            </div>
+            <div class="col-sm-2" style="padding-left:125px">
+                <i class="fa fa-times icon" id="clear"></i>
+            </div>
+        </div>
+            <br />
+            <table class="table table-striped table-hover" id="myTable">
+                <thead>
+                    <tr>
+
+                        <th onclick="sortTable(0)">Pathway Name  &nbsp;<i class="fa fa-arrow-circle-up"></i>&nbsp;<i class="fa fa-arrow-circle-down"></i></th>
+                        <th onclick="sortTable(1)">Institute Name &nbsp;<i class="fa fa-arrow-circle-up"></i>&nbsp;<i class="fa fa-arrow-circle-down"></i></th>
+                        <th onclick="sortTable(2)">Institute Url &nbsp;<i class="fa fa-arrow-circle-up"></i>&nbsp;<i class="fa fa-arrow-circle-down"></i></th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="myTablebody">
+                    @{ var item = 0;}
+                    @foreach (var user in Model.pathways)
+                    {
+
+                        item++;
+
+                        <tr>
+                            @*<td>
+                                @item
+                            </td>*@
+                            <td>
+                                @user.PathwayName
+                            </td>
+                            <td>@user.InstituteName</td>
+                            <td><a href="@user.InstituteUrl" target="_blank"> @user.InstituteUrl</a></td>
+                            @{ bool a = false;}
+                            @if (Model.checkRequests.Count() > 0)
+                            {
+
+                                @foreach (var cr in Model.checkRequests)
+                                {
+
+
+                                    if (user.Id == cr.PathwayId)
+                                    {
+                                        a = true;
+
+
+                                        <td>
+                                            <a asp-controller="PathwayEarner" asp-action="PathwaySteps" asp-route-pathwayId="@user.Id">
+
+                                                <div class="bg-secondary" data-toggle="tooltip" title="View">
+                                                    <div class="progress-bar bg-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width:@user.PathwayCompletion%">
+                                                        @(@user.PathwayCompletion== 100 ? "Completed":user.PathwayCompletion+"%" )
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </td>
+
+
+                                        break;
+                                    }
+                                }
+
+                            }
+                            @{ bool stepCheck = false;}
+                            @if (@a == false)
+                            {
+                                @foreach (var steps in Model.pathwaySteps)
+                                {
+                                    @if (steps.PathwayId == user.Id.ToString())
+                                    {
+                                        stepCheck = true;
+                                        <td>
+                                            <a class=" btn btn-primary " asp-route-currentpage="@Model.PagingInfo.CurrentPage" asp-action="Start" asp-route-id="@user.Id"><b>Subscribe</b></a>
+
+                                        </td>
+                                        break;
+                                    }
+                                }
+                                @if (stepCheck == false)
+                                {
+                                    <td>
+                                        <a style="cursor:not-allowed" title="No steps available.....In progress" onclick="edit(e)" class="btn btn-primary"><b style="color:white">In Progress</b></a>
+
+                                    </td>
+                                }
+
+                            }
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            <div page-model="@Model.PagingInfo" page-action="Index" page-classes-enabled="true"
+                 page-class="btn border" page-class-normal="btn btn-default active"
+                 page-class-selected="btn btn-primary active" class="btn-group m-1"></div>
+        </div>
+
+        }
+
+        else
+        {
+        <div class="text-center"><h3>No Pathways</h3></div>
+        <div class="text-center"><p>Pathway help you to earn badges on completing the defined levels in pathway .</p></div>
+
+        <br />
+
+        <br />
+        <div class="row">
+            @*<div class="col-3"></div>*@
+            <div class="col text-center "><img src="~/images/issuers.png" style="align-content:center;opacity: 0.5;" alt="Issuers" /></div>
+            @*<div class="col-3"></div>*@
+        </div>
+        }
+
+
+
+        @section scripts{
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                    $("#myInput").on("keyup", function () {
+                        var value = $(this).val().toLowerCase();
+                        $("#myTablebody tr").filter(function () {
+                            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                        });
+                    });
+                });
+
+                $("#clear").on('click', function () {
+                    document.getElementById('myInput').value = '';
+                    location.reload();
+                });
+
+                function edit(e) {
+                    e.preventDefault();
+                }
+
+                /*method to sort table by default asc*/
+                function sortTable(n) {
+                    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+                    table = document.getElementById("myTable");
+                    switching = true;
+                    dir = "asc";
+                    while (switching) {
+                        switching = false;
+                        rows = table.rows;
+                        for (i = 1; i < (rows.length - 1); i++) {
+                            shouldSwitch = false;
+                            x = rows[i].getElementsByTagName("TD")[n];
+                            y = rows[i + 1].getElementsByTagName("TD")[n];
+                            if (dir == "asc") {
+                                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                    shouldSwitch = true;
+                                    break;
+                                }
+                            } else if (dir == "desc") {
+                                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                    shouldSwitch = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (shouldSwitch) {
+                            console.log('hi');
+                            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                            switching = true;
+                            switchcount++;
+                        } else {
+                            if (switchcount == 0 && dir == "asc") {
+                                console.log('hi hi');
+                                dir = "desc";
+                                switching = true;
+                            }
+                        }
+                    }
+                }
+
+            </script>
+        }

@@ -1,0 +1,29 @@
+web api
+https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mongo-app?view=aspnetcore-3.1&tabs=visual-studio
+
+crud app
+http://www.binaryintellect.net/articles/b6f251ee-0dd9-4741-8928-107a62b63e74.aspx
+
+Mongodb installation guide
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
+
+mongo download   latest 4.2.7
+https://www.mongodb.com/try/download/community
+
+mongodb compass 1.21.2
+https://www.mongodb.com/try/download/compass
+
+
+
+basic commands
+show dbs         ---------------to check all databases
+use databasename --------------to make that database in use
+db               ---------------to show current database
+db.createCollection(cname)
+db.collectionname.drop()
+db.collectionname.insert({"name":"Saurabh"})
+db.collectionname.find().pretty()
+db.collectionname.remove()
+
+ 
+

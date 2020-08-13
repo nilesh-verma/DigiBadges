@@ -1,0 +1,75 @@
+﻿@model DigiBadges.DataAccess.ViewModels.PathwayCreation
+@{
+    var title = "Edit Pathway step";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="userRole">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>@title</h2>
+                </div>
+            </div>
+        </div>
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group col-md-3">
+                    <label asp-for="StepName">Step Name</label>
+                    <input type="text" asp-for="StepName" class="form-control" placeholder="Step Name">
+                    <span asp-validation-for="StepName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="Description">Description</label>
+                    <input type="text" asp-for="Description" class="form-control" placeholder="Description">
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="Documents">Documents</label>
+                    <input type="file" name="files" id="uploadBox" asp-for="Documents" multiple class="form-control" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="GetBadges">Badges</label>
+                    <select asp-for="GetBadges" class="form-control">
+                        <option selected disabled>Select</option>
+                        @foreach (var badge in Model.GetBadgesinList)
+                        {
+                            <option value="@badge.Id">@badge.BadgeName</option>
+                        }
+                    </select>
+                    <span asp-validation-for="GetBadges" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <a class="btn btn-danger" style="width:170px" asp-action="ManagePathway" asp-route-id="@Model.PathwayId">Cancel</a>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" id="submit" disabled class="btn btn-success form-control">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $("#uploadBox").change(function () {
+            if (document.getElementById("uploadBox").files.length > 0) {
+                $("#submit").removeAttr("disabled");
+            }
+            else if (document.getElementById("uploadBox").files.length == 0) {
+                alert("Please select file upload");
+                $("#submit").attr("disabled", true);
+            }
+            else {
+                $("#submit").removeAttr("disabled");
+            }
+        });
+
+    </script>
+}
+

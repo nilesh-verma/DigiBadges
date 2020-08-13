@@ -1,0 +1,94 @@
+﻿@model DigiBadges.Models.ViewModels.StaffUsers
+<br />
+<h2 class="text-info text-center">Create Staff</h2>
+<hr />
+<form method="post" enctype="multipart/form-data">
+    <div class="p-4">
+        <input hidden asp-for="Users.UserId" class="form-control" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-8">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Users.FirstName">First Name</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Users.FirstName" class="form-control" />
+                    <span asp-validation-for="Users.FirstName" class="text-danger"></span>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Users.LastName">Last Name</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Users.LastName" class="form-control" />
+                    <span asp-validation-for="Users.LastName" class="text-danger"></span>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Users.Email">Staff Email</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Users.Email" class="form-control" />
+                    <span asp-validation-for="Users.Email" class="text-danger"></span>
+
+                </div>
+            </div>
+        </div>
+        @*<div class="col-8">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Users.Password">Password</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Users.Password" class="form-control" value="Welcome@123" />
+                    <span asp-validation-for="Users.Password" class="text-danger"></span>
+
+                </div>
+            </div>
+        </div>*@
+        <div class="col-8">
+            <div class="form-group row">
+
+                <div class="col-4">
+                    <label asp-for="Users.RoleId">Staff Role</label>
+                </div>
+                <div class="col-8">
+                    <select asp-for="Users.RoleId" class="form-control">
+                        <option selected disabled>Select</option>
+                        @foreach (var badge in Model.UserRoles)
+                        {
+                            if (badge.Role == "Earner")
+                            {
+                                <option value="@badge.RoleId">@badge.Role</option>
+
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="Users.RoleId" class="text-danger"></span>
+                </div>
+
+            </div>
+        </div>
+        <br />
+        <div class="form-group" style="margin-left:25%">
+            <a asp-controller="Staff" asp-action="ViewStaff" style="margin-right:25px;width:200px;height:40px;text-size-adjust:auto" class="btn btn-danger">Cancel </a>
+
+            <input type="submit" style="width:200px;height:40px;text-size-adjust:auto" class="btn btn-success" value="Submit" />
+        </div>
+    </div>
+
+</form>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

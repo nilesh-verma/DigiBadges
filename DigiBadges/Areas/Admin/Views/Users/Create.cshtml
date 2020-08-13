@@ -1,0 +1,93 @@
+﻿@model DigiBadges.Models.ViewModels.CreateUser
+@{
+    var title = "Create User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="userRole">
+
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>@title</h2>
+                </div>
+
+            </div>
+        </div>
+        <form method="post" id="createForm">
+            <div class="form-row">
+                <div asp-validation-summary="ModelOnly" class="col-12 text-danger"></div>
+                <div class="form-group col-md-4">
+
+                    <label asp-for="users.FirstName">First Name</label>
+                    <input type="text" asp-for="users.FirstName" class="form-control" placeholder="First Name">
+                    <span asp-validation-for="users.FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="users.LastName">Last Name</label>
+                    <input type="text" asp-for="users.LastName" class="form-control" placeholder="Last Name">
+                    <span asp-validation-for="users.LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="users.RoleId">Role</label>
+                    <select asp-for="users.RoleId" class="form-control">
+                       <option disabled selected>Select</option>
+                        @foreach (var roles in Model.userRoles)
+                        {
+                            <option value="@roles.RoleId">@roles.Role</option>
+                        }
+                    </select>
+                    <span asp-validation-for="users.RoleId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="users.Email">Email</label>
+                    <input type="email" class="form-control" asp-for="users.Email" placeholder="Email">
+                    <span asp-validation-for="users.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="users.Password">Password</label>
+                    <input type="password" class="form-control" asp-for="users.Password" placeholder="Password">
+                    <span asp-validation-for="users.Password" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+
+                <div class="form-group">
+                    <a asp-action="Index" class="btn btn-danger m-1">Cancel</a>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success m-1"  value="Create">
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+</div>
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).on('submit', 'form', function () {
+            var buttons = $(this).find('[type="submit"]');
+            if ($(this).valid()) {
+                buttons.each(function (btn) {
+                    $(buttons[btn]).prop('disabled', true);
+                });
+            } else {
+                buttons.each(function (btn) {
+                    $(buttons[btn]).prop('disabled', false);
+                });
+            }
+        });
+
+        $(":text").each(function (index) {
+            $(this).focusout(function () {
+                var text = $(this).val();
+                text = $.trim(text);
+                $(this).val(text);
+            });
+        });
+    </script>
+    }

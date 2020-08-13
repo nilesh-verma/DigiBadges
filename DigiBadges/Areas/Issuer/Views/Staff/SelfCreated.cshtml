@@ -1,0 +1,41 @@
+﻿@model IEnumerable<DigiBadges.DataAccess.Users>
+@{
+    ViewData["Title"] = "SelfCreated";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+@if (Model.Count() > 0)
+{
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Email Id</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+
+                <tr>
+                    <td>@i.FirstName</td>
+                    <td>@i.LastName</td>
+                    <td>@i.Email</td>
+                    <td>
+                        <a class="btn btn-primary" asp-action="AddAsStaff" asp-route-id="@i.Id">Add as Staff</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+}
+else
+{
+    <p class="font-weight-bold text-center text-muted">No Self Created User Found !</p>
+}

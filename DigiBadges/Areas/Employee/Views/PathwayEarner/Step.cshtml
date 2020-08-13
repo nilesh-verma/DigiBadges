@@ -1,0 +1,116 @@
+﻿@model DigiBadges.DataAccess.ViewModels.PathwayVM
+@{
+    ViewData["Title"] = "Step";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var pathwayId = Model.pathwaySteps.FirstOrDefault().PathwayId;
+}
+
+<style>
+    #downloadbtn {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+        /* Darker background on mouse-over */
+        #downloadbtn:hover {
+            background-color: RoyalBlue;
+        }
+</style>
+
+<br />
+<br />
+<div class="text-center"> <h3 style="color:cornflowerblue">Pathway Step Details</h3></div>
+<br />
+<div class="container" style="border-style: ridge;">
+    <form method="post" enctype="multipart/form-data">
+        <table class="table table-striped">
+
+            <tbody>
+                @foreach (var item in Model.pathwaySteps)
+                {
+                    <tr>
+                        <td scope="col"><b>Step Name</b></td>
+                        <td scope="col">@item.StepName</td>
+                    </tr>
+                    <tr>
+                        <td scope="col"><b>Step Description</b></td>
+                        <td scope="col">@item.Description</td>
+                    </tr>
+                    <tr>
+                        <td scope="col"><b>Step Document</b></td>
+                        <td scope="col">
+                            <a class="btn" id="downloadbtn" href="~/Documents/@item.Documents" download>
+                                <i class="fa fa-download"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td scope="col"><b>Upload Quiz</b></td>
+                    <td scope="col">
+                        <input type="file" style="width:300px" name="files" id="uploadBox" multiple class="form-control" accept=".doc,.docx,.txt" />
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <div class="text-center">
+            <a class="btn btn-dark" asp-controller="PathwayEarner" asp-action="PathwaySteps" asp-route-pathwayId="@pathwayId">Cancel</a>
+            <input class="btn btn-success" id="submit" disabled type="submit" asp-action="Step" asp-route-isCompleted=@ViewBag.checkRequestId value="Complete Step">
+        </div>
+    </form>
+</div>
+<br />
+<br />
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $("#uploadBox").change(function () {
+            var fileName = document.getElementById('uploadBox').value.toLowerCase();
+            var fileUpload = document.getElementById('uploadBox');
+            var size = 0;
+            if (fileUpload.files.length > 0) {
+                size = parseFloat(fileUpload.files[0].size / (1024)).toFixed(5);
+            }
+
+            if (document.getElementById("uploadBox").files.length > 0 && (size != "undefined" || size != null)) {
+                if (!fileName.endsWith('.doc') && !fileName.endsWith('.docx') && !fileName.endsWith('.txt')) {
+                    $("#submit").attr("disabled", true);
+                    swal('Please Upload text or doc file only')
+                }
+                else {
+                    if (fileName.endsWith('.txt') && size > 50) {
+                        $("#submit").attr("disabled", true);
+                        swal('File size is too big!! Maximum size limit is 50KB');
+                    }
+                    else if (fileName.endsWith('.doc') && size > 1000) {
+                        swal('File size is too big!! Maximum size limit is 1MB');
+                    }
+                    else if (fileName.endsWith('.docx') && size > 1000) {
+                        $("#submit").attr("disabled", true);
+                        swal('File size is too big!! Maximum size limit is 1MB');
+                    }
+                    else {
+                        $("#submit").removeAttr("disabled");
+                    }
+                }
+            }
+            else {
+                if (document.getElementById("uploadBox").files.length == 0 || typeof (fileUpload.files) == "undefined") {
+                    swal('Please Select file to upload')
+                    $("#submit").attr("disabled", true);
+                }
+                else {
+                    $("#submit").removeAttr("disabled");
+                }
+            }
+
+        });
+    </script>
+}

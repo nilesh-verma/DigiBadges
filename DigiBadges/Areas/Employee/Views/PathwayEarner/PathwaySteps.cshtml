@@ -1,0 +1,192 @@
+﻿@model List<DigiBadges.Models.StepsInPathway>
+@{
+
+    ViewData["Title"] = "PathwaySteps";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var pathwayName = Model.FirstOrDefault().PathwayName;
+    var isPathwayComplete = Model.Last().IsApproved;
+}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-area="Employee" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-area="Employee" asp-controller="PathwayEarner" asp-action="Index">Pathway </a></li>
+        <li class="breadcrumb-item active" aria-current="page">View</li>
+    </ol>
+</nav>
+<div class="pb-5 pt-2" @*data-aos-easing="ease" data-aos-duration="400" data-aos-delay="0"*@>
+    <div class="title mb-5 text-center">
+        <h3>@pathwayName</h3>
+    </div>
+    <div id="pathway">
+        @{ var stepNo = 1;}
+        @foreach (var pathSteps in Model)
+        {
+            bool stepCompleted = pathSteps.IsCompleted != null && pathSteps.IsCompleted == true;
+            var defaultObjId = new MongoDB.Bson.ObjectId();
+            if (stepNo % 2 == 0)
+            {
+                <div class="row">
+
+                    <div class="col-md-5 d-lg-block d-md-block d-sm-none d-xs-none">
+                        <div class="
+                             @(stepCompleted ? (pathSteps.IsApproved == true ? "process-point-left-complete" : "process-point-left-waiting")
+                                                              : "process-point-left")
+                             "></div>
+                    </div>
+                    <div class="col-md-2 d-lg-block d-md-block d-sm-none d-xs-none"></div>
+                    <div class="col-md-5 @(@pathSteps.StepId.Equals(defaultObjId) ? "disabled-prop opacity-5" : "")">
+
+                        <div class="process-box process-right" data-aos="fade-left" data-aos-duration="1000">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="process-step">
+                                        <p class="m-0 p-0">Step</p>
+                                        <h2 class="m-0 p-0">@pathSteps.Count</h2>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <h5>@pathSteps.StepName</h5>
+                                    <p data-toggle="tooltip"><small>@pathSteps.Description</small></p>
+                                    @if (pathSteps.IsDeclined != true && (pathSteps.StepId.Equals(defaultObjId) || pathSteps.IsCompleted == true))
+                                    {
+                                        <button disabled class="btn btn-sm text-white disabled-prop @(@pathSteps.IsApproved == true?"bg-yellowgreen":pathSteps.IsCompleted==null?"bg-primary":"bg-coral")" data-toggle="tooltip">
+                                            @{if (pathSteps.IsApproved == true)
+                                                {<i class='material-icons mr-1' title="Completed" data-toggle="tooltip" style="font-size:inherit;">done_outline</i>
+                                                    <span title="Completed" data-toggle="tooltip">Completed</span>}
+                                                else if (pathSteps.IsCompleted == null)
+                                                {
+                                                    <span>Start</span>
+                                                }
+                                                else
+                                                {<i class='material-icons mr-1' title="Waiting for Approval" data-toggle="tooltip" style="font-size:inherit;">watch_later</i>
+                                                    <span title="Waiting for Approval" data-toggle="tooltip">Waiting for Approval</span> } }
+                                        </button>
+                                        if (pathSteps.BadgeImageURL != null)
+                                        {
+                                            <img title="Reward" data-toggle="tooltip" src="@pathSteps.BadgeImageURL" class="step-badge-img" />
+                                           
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (pathSteps.IsDeclined == true)
+                                        {
+                                            <a data-toggle="tooltip" title="@pathSteps.DeclineReason You need to attempt again !'" asp-route-id="@pathSteps.StepId" asp-action="step" class="btn btn-sm btn-primary btn-outline-warning text-white bg-coral" )">Restart</a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-route-id="@pathSteps.StepId" asp-action="step" class="btn btn-sm btn-primary" title="@(pathSteps.IsCompleted == null ? "Finish Prev" : "")">Start</a>
+                                        }
+
+                                        if (pathSteps.BadgeImageURL != null)
+                                        {
+                                            <img src="@pathSteps.BadgeImageURL" class="step-badge-img" />
+                                            <p class="step-rewards">Rewards:</p>
+                                        }
+
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="process-line-r d-lg-block d-md-block d-sm-none d-xs-none"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-md-5 @(@pathSteps.StepId.Equals(defaultObjId) ? "disabled-prop opacity-5" : "")">
+
+                        <div class="process-box process-left" data-aos="fade-right" data-aos-duration="1000">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="process-step">
+                                        <p class="m-0 p-0">Step</p>
+                                        <h2 class="m-0 p-0">@pathSteps.Count</h2>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <h5>@pathSteps.StepName</h5>
+                                    <p><small>@pathSteps.Description</small></p>
+                                    @if (pathSteps.IsDeclined != true && (pathSteps.StepId.Equals(defaultObjId) || pathSteps.IsCompleted == true))
+                                    {
+                                        <button disabled class="btn btn-sm text-white disabled-prop @(@pathSteps.IsApproved == true?"bg-yellowgreen":pathSteps.IsCompleted==null?"bg-primary":"bg-coral")" data-toggle="tooltip">
+                                            @{if (pathSteps.IsApproved == true)
+                                                {<i class='material-icons mr-1' title="Completed" data-toggle="tooltip" style="font-size:inherit;">done_outline</i>
+                                                    <span title="Completed" data-toggle="tooltip">Completed</span>}
+                                                else if (pathSteps.IsCompleted == null)
+                                                {
+                                                    <span>Start</span>
+                                                }
+                                                else
+                                                {<i class='material-icons mr-1' title="Waiting for Approval" data-toggle="tooltip" style="font-size:inherit;">watch_later</i>
+                                                    <span title="Waiting for Approval" data-toggle="tooltip">Waiting for Approval</span> } }
+                                        </button>
+                                        if (pathSteps.BadgeImageURL != null)
+                                        {
+                                            <img title="Reward" data-toggle="tooltip" src="@pathSteps.BadgeImageURL" class="step-badge-img" />
+                                            
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (pathSteps.IsDeclined == true)
+                                        {
+                                            <a data-toggle="tooltip" title="@pathSteps.DeclineReason You need to attempt again !'" asp-route-id="@pathSteps.StepId" asp-action="step" class="btn btn-sm btn-primary btn-outline-warning text-white bg-coral" )">Restart</a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-route-id="@pathSteps.StepId" asp-action="step" class="btn btn-sm btn-primary" title="@(pathSteps.IsCompleted == null ? "Finish Prev" : "")">Start</a>
+                                        }
+
+                                        if (pathSteps.BadgeImageURL != null)
+                                        {
+                                            <img src="@pathSteps.BadgeImageURL" class="step-badge-img" />
+                                            <p class="step-rewards">Rewards:</p>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="process-line-l d-lg-block d-md-block d-sm-none d-xs-none"></div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-2 d-lg-block d-md-block d-sm-none d-xs-none"></div>
+                    <div class="col-md-5 d-lg-block d-md-block d-sm-none d-xs-none">
+                        <div class="@(stepCompleted?(pathSteps.IsApproved==true?"process-point-right-complete":"process-point-right-waiting")
+                                                                                       :"process-point-right")
+                             "></div>
+                    </div>
+                </div>
+            }
+            stepNo++;
+        }
+        <div class="row">
+            <div class="col text-center">
+                @if (isPathwayComplete == true)
+                {
+                <h5 class="pathway-end bg-success" title="Congrutulations, You have completed this pathway." data-toggle="tooltip">
+                    Congrutulations !
+                </h5>
+                }
+                else
+                {
+                    <h5 class="pathway-end">End</h5>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+        AOS.init();
+    </script>
+}

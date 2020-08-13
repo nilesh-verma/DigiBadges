@@ -1,0 +1,76 @@
+﻿@inject IAuthenticationSchemeProvider SchemeProvider
+@using Microsoft.AspNetCore.Authentication
+@model DigiBadges.Models.ViewModels.RegisterVM
+@{
+    ViewData["Title"] = "Register";
+}
+
+
+    <div class="py-4">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="row form-group">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body px-lg-5 pt-4">
+                        <form autocomplete="off" asp-controller="Register" asp-action="Index" method="post">
+                            <h3 class="col-12 text-success text-center py-4">
+                                <strong>Sign Up</strong>
+                            </h3>
+                            <hr />
+                            <div class="py-2 form-group">
+                                <input asp-for="FirstName" placeholder="First Name" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="py-2 form-group">
+                                <input asp-for="LastName" type="text" placeholder="Last Name" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                            <div class="py-2 form-group">
+                                <input asp-for="Email" type="text" placeholder="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="py-2 form-group">
+                                <input asp-for="Password" placeholder="Password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <div class="py-2 form-group">
+                                <input asp-for="ConfirmPassword" placeholder="Confirm Password" class="form-control" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                            <div class="py-2">
+                                <button type="submit" class="btn btn-primary">Register</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card register-txt-box">
+                    <section>
+                        <h3 class="col-12 text-success text-center py-4">
+                            <strong>Use another service to register.</strong>
+                        </h3>
+                        <hr />
+                        <div class="py-4 px-lg-4">
+                            <div class="login-box">
+                                <h3 class="login-social-title">Login with social providers</h3>
+                                <h6 class="select-list-txt">Select from the list of available social providers</h6>
+                                <div class="" role="group">
+                                    @foreach (var provider in await SchemeProvider.GetRequestHandlerSchemesAsync())
+                                    {
+                                        <a  class="btn btn-lg btn-default facebook-link" asp-route-returnUrl="@Context.Request.Query["returnUrl"]"
+                                           asp-route-provider="@provider.Name"
+                                           asp-action="ExternalRegister"><i class="fa fa-@provider.Name.ToLower()"></i> @provider.Name</a> <br />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

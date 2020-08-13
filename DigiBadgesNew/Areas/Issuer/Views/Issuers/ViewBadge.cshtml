@@ -1,0 +1,74 @@
+﻿@model DigiBadges.Models.ViewModels.IssuerBadge
+@{
+    ViewData["Title"] = "ViewBadge";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col">
+    <nav aria-label="breadcrumb" class="float-right">
+
+        <ol class="breadcrumb" >
+            <li class="breadcrumb-item"><a asp-action="Index">Issuers</a></li>
+            <li class="breadcrumb-item"><a asp-action="Issuers" asp-route-id=@Model.issuer.Id>@Model.issuer.Name</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.badge1.BadgeName</li>
+        </ol>
+    </nav>
+</div>
+<br />
+<br />
+<hr />
+
+
+
+<div class="row " style="border:0.5px solid black">
+    <div class="col-4 ">
+        <div class="row" style="padding:10px"><img src=@Model.badge1.ImageUrl style="align-content:center;opacity: 0.;border-right:2px solid #bbb9b9;" alt="badge" /></div>
+    </div>
+    <div class="col-5">
+        <div class="row"> <h3 style="color:blueviolet;margin-top:5px">@Model.badge1.BadgeName</h3></div>
+        @*<p>Created on june 22,2020</p><br>*@
+        <div class="row"> <p>Created on : @Model.badge1.CreatedOn .</p></div>
+        <div class="row"> <p>@Model.badge1.Description .</p></div>
+        <a class="btn btn-primary" asp-action="Award" asp-route-id="@Model.badge1.BadgeId">Award Badge</a>
+        <a class="btn btn-success" href="https://www.facebook.com/profilepicframes/?selected_overlay_id=@TempData["badgetest"]">
+            Use as facebook frame
+        </a>
+    </div>
+    <div class="col-3">
+        <div class="row" style="margin-top:10px"> <p>Issued By</p></div>
+        <div class="row">  <h5>@Model.issuer.Name</h5></div>
+        @*<a class="float-right btn btn-primary" asp-controller="Issuers" asp-action="BadgeEdit" asp-route-id=@Model.badge1.BadgeId>Edit</a><br>
+        <a class="float-right btn btn-primary" asp-controller="Issuers" asp-action="BadgeDelete" asp-route-id=@Model.badge1.BadgeId>Delete</a><br>*@
+        @*<a href="#">View public page</a><br>*@
+    </div>
+</div>
+<br>
+<br>
+<div class="row">
+    <table class="table table-striped">
+        <thead>
+            <tr style="background-color:azure">
+                <th scope="col">Reciptant</th>
+                <th scope="col">Awarded on</th>
+                @*<th scope="col">Expired on</th>*@
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Badge_User_Collections)
+            {
+            <tr>
+
+                <th scope="row">@item.RecipientName (@item.RecipientEmail)</th>
+                <td>@item.IssuedDate</td>
+                @* <td>@item.ExpirationDate</td>*@
+                <td>@Model.badge1.Description</td>
+
+            </tr>
+            }
+            </tbody>
+    </table>
+</div>
+
+
+

@@ -1,0 +1,41 @@
+﻿@model DigiBadges.Models.UserRoles
+
+@{
+    var title = "Edit Role";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post">
+    <div class="row p-3 border">
+        <input hidden asp-for="@Model.RoleId" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-12 border-bottom text-center">
+            <h2 class="text-primary">@title</h2>
+        </div>
+        <div class="col-8 pt-4">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Role"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Role" class="form-control" />
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-8 offset-4">
+                    <div class="row">
+
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-primary form-control">Cancel</a>
+                        </div>
+                        <div class="col">
+                            <button type="submit" class="btn btn-danger form-control">Update</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

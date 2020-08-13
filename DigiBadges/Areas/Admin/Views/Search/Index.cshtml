@@ -1,0 +1,106 @@
+@model DigiBadges.Models.ViewModels.SearchVM
+@{
+    var title = "All Users";
+    var item = 0;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+ <div class="solrUser">
+
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2>@title</h2>
+                    </div>
+                    
+                </div>
+            </div>
+            <form method="post">
+                <div class="form-row">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group col-md-4">
+
+                        <label asp-for="FirstName">First Name</label>
+                        <input type="text" asp-for="FirstName" class="form-control" placeholder="First Name">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="LastName">Last Name</label>
+                        <input type="text" asp-for="LastName" class="form-control" placeholder="Last Name">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                   
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="Email">Email</label>
+                        <input type="email" class="form-control" asp-for="Email" placeholder="Email">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">&nbsp;</div>
+                
+                </div>
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <a asp-action="Index" class="btn btn-danger m-1">Clear</a>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success m-1">Search</button>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+<div class="solrUser">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6">
+                      
+                    </div>
+                 
+                </div>
+            </div>
+            @if (Model.usrList.Count() != 0)
+            {
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>F Name</th>
+                        <th>L Name</th>
+                        <th>Email</th>
+                        @*<th>Password</th>*@                      
+                        <th>Created Date</th>                        
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var usr in Model.usrList)
+                    {
+                        item++;
+                       
+                        <tr>
+                            <td>@usr.FirstName</td>
+                            <td>@usr.LastName</td>
+                            <td>@usr.Email</td>
+                            @*<td>@usr.Password</td>*@                                                     
+                            <td>@usr.CreatedDate.ToString("MM/dd/yyyy")</td>    
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+            }
+            else
+            {
+                <p class="font-weight-bold text-center text-muted">No Users Found !</p>
+            }
+
+        </div>
+    </div>
+
+
+   

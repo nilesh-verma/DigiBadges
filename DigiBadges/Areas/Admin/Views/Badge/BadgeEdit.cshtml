@@ -1,0 +1,117 @@
+﻿@model DigiBadges.DataAccess.Badge
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<br />
+<h2 class="text-info text-center">Edit Badge</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="p-4 border rounded row">
+        <input hidden asp-for="@Model.Id" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-8">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="BadgeName"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="BadgeName" class="form-control" />
+
+                </div>
+                <span asp-validation-for="BadgeName" class="text-danger"></span>
+            </div>
+
+            @*<div class="form-group row">
+            <div class="col-4">
+                <label asp-for="Email"></label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Email" class="form-control" />
+
+            </div>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>*@
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="ExpiryDuration"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="ExpiryDuration" class="form-control" />
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label>Image </label>
+                </div>
+                <div class="col-8">
+                    <input type="file" name="files" id="uploadBox" multiple class="form-control" asp-for="ImageUrl" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="EarningCriteriaDescription"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="EarningCriteriaDescription" class="form-control" />
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="FacebookId"></label>
+                </div>
+                <div class="col-4">
+                    <input asp-for="FacebookId" class="form-control" />
+                    <span asp-validation-for="FacebookId" class="text-danger"></span>
+                </div>
+                <div class="col-4">
+                    <a href="https://www.facebook.com/frames/manage/" target="_blank" class="btn btn-default btn-lg"><i class="fa fa-facebook fa-fw"></i> <span class="network-name">Facebook</span></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-1">
+
+        </div>
+        <div class="col-3">
+            <img src="@Model.ImageUrl" width="100%" style="border-radius:5px; border:1px solid #bbb9b9;" />
+        </div>
+
+
+        <br />
+        <div class="form-group row" style="margin-left:25%">
+
+            <a asp-action="ViewBadge" asp-route-id="@Model.Id" style="margin-right:25px;width:200px;height:40px;text-size-adjust:auto" class="btn btn-danger">Cancel</a>
+            <input type="submit" class="btn btn-success" style="width:200px;height:40px;text-size-adjust:auto" value="Update" asp-route-id=@Model.Id />
+
+        </div>
+
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.tiny.cloud/1/m0yrc02gypdwbpw2su9vwys5mahxctd2f8lu5faa4uc5ydr5/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'lists',
+            menubar: 'file edit format'
+        });
+
+
+        function validateInput() {
+            if (document.getElementById("uploadBox").value == "") {
+                swal("Error", "Please select an image", "error");
+                return false;
+            }
+            return true;
+        };</script>
+
+}
+
+

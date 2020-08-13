@@ -1,0 +1,139 @@
+﻿@model DigiBadges.Models.ViewModels.IssuerBadge
+
+@{
+    ViewData["Title"] = "Issuers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    //var path = Model.ImagePath;
+    var count = 0;
+    
+}
+
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v7.0&appId=603929643569875&autoLogAppEvents=1" nonce="mj6JMJP1"></script>
+
+
+<div class="col m-1">
+    <nav aria-label="breadcrumb" class="float-right">
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Issuers</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.issuer.Name</li>
+        </ol>
+    </nav>
+</div>
+<br />
+<br />
+<hr />
+<div class="container" style="border-style: ridge;">
+    <div class="row">
+        <div class="col-4" style="border-right:1px solid #bbb9b9;"><img src=@Model.issuer.ImagePath style="width:100%;height:150px" /></div>
+        <div class="col-4">
+            <div class="row m-3">
+                <h4 style="color:blueviolet"> @Model.issuer.Name</h4>
+            </div>
+            <div class="row m-3">
+                @Model.issuer.Description
+            </div>
+            <div class="row m-3">
+                <div class="col-6"> <label>Award :</label> <b>@Model.Badge_Count</b></div>
+                <div class="col-6"> <label>Badge :</label> <b>@Model.badge.Count()</b></div>
+
+            </div>
+
+
+        </div>
+        <div class="col-4 " style="margin-top: 20px;">
+
+            <div class="row">
+                <a class="float-right btn btn-primary" asp-action="Badge" asp-route-id="@Model.Id">Add Badge</a>
+            </div>
+            @*<div class="row">
+                    <button class="float-right">B</button>
+                </div>
+                <div class="row">
+                    <button class="float-right">C</button>
+                </div>*@
+        </div>
+    </div>
+</div>
+<hr />
+<hr />
+<div class="col "><a class="float-right btn btn-secondary" asp-controller="Issuers" asp-action="Badge" asp-route-id="@Model.Id">Create Badges</a></div>
+<br />
+<br />
+
+@if (Model.badge.Count() > 0)
+{
+    <div class="container border border-secondary rounded" style="padding:15px;">
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped" width="100%">
+                    <tr class="table-info">
+
+                        <th style="text-align:center;">
+                            <label asp-for="@Model.badge.FirstOrDefault().BadgeName"></label>
+                        </th>
+                        <th style="text-align:center;">
+                            <label asp-for="@Model.badge.FirstOrDefault().Description"></label>
+                        </th>
+                        <th style="text-align:center;">
+                            <label asp-for="@Model.badge.FirstOrDefault().ExpiryDate"></label>
+                        </th>
+
+                        <th style="text-align:center;"></th>
+                    </tr>
+                    @foreach (var item in Model.badge)
+                    {
+                        <tr style="padding:50px;">
+
+                            <td style="text-align:center">
+                                @Html.DisplayFor(c => item.BadgeName)
+                            </td>
+                            <td style="text-align:center">
+                                @Html.DisplayFor(c => item.Description)
+                            </td>
+                            <td style="text-align:center">
+                                @Html.DisplayFor(c => item.ExpiryDate)
+                            </td>
+
+                            <td style="text-align:center">
+                                <a class="btn btn-danger" asp-controller="Issuers" asp-action="ViewBadge" asp-route-id="@item.BadgeId">
+                                    @*<i class="fas fa-trash-alt"></i>*@View
+                                </a>
+
+                                
+                                @*<div class="fb-share-button" data-href="https://docs.microsoft.com/en-us/dotnet/api/system.windows.media.imaging.bitmapframe?view=netcore-3.1" data-layout="button_count" data-size="small">
+                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdocs.microsoft.com%2Fen-us%2Fdotnet%2Fapi%2Fsystem.windows.media.imaging.bitmapframe%3Fview%3Dnetcore-3.1&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a>
+                                </div>*@
+                            </td>
+                        </tr>
+
+                    }
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+}
+
+else
+{
+    <div class="text-center"><h3>The issuer has no badge</h3></div>
+    <div class="text-center"><p>Create badges to award the earner on completing their pathway.</p></div>
+
+    <br />
+    <div class="row">
+        @*<div class="col-4"></div>*@
+        <div class="col text-center"><a asp-controller="Issuers" asp-action="Badge">Create Badge</a></div>
+        @*<div class="col-4"></div>*@
+    </div>
+    <br />
+    <div class="row">
+        @*<div class="col-3"></div>*@
+        <div class="col text-center "><img src="~/images/issuers/cd0fff1f-1794-4459-b05e-e7382a354add.jpg" style="align-content:center;opacity: 0.5;" alt="Issuers" /></div>
+        @*<div class="col-3"></div>*@
+    </div>
+}

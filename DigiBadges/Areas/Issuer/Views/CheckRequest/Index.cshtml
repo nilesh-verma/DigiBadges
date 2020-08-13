@@ -1,0 +1,149 @@
+﻿@model IEnumerable<DigiBadges.Models.CompletedPathway>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #downloadbtn {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+        /* Darker background on mouse-over */
+        #downloadbtn:hover {
+            background-color: RoyalBlue;
+        }
+</style>
+
+@if (Model.Count() >= 1)
+{
+    @* <div class="row mt-2 " style="background-color:white;border-radius:5px">
+            <div class="col-3"><p class="float-left m-2"><b> Request by earner :</b>@Model.Count() request </p></div>
+
+        </div>*@
+    <br />
+    <br />
+    <div class="text-center"> <h3 style="color:cornflowerblue">Requested by Employee</h3></div>
+    <div class="container" style="border-style: ridge;">
+
+
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Pathway Name</th>
+                    <th>Step Name</th>
+                    <th>User Name</th>
+                    <th>Is Completed</th>
+                    <th>Documents Uploaded</th>
+                    <th>Is Approved</th>
+                    <th>Approve</th>
+                    <th>Declined</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ var count = 0;}
+                @foreach (var item in Model)
+                {
+                    @if ((item.IsCompleted == true && item.IsApproved == false) && (item.IsDeclined==null))
+                    {
+                        count++;
+
+                        <tr>
+                            <td>
+                                @count
+                            </td>
+                            <td>
+                                @item.PathwayName
+
+                            </td>
+                            <td>
+                                @item.StepName
+                            </td>
+                            <td>@item.Name</td>
+                            <td>
+                                @item.IsCompleted
+                            </td>
+                            <td><a class="btn" id="downloadbtn" href="~/UploadedDocuments/@item.uploadedDocuments" download><i class="fa fa-download"></i></a></td>
+                            <td>
+                                @item.IsApproved
+
+                            </td>
+                            <td><a class="btn btn-success" asp-action="Approve" asp-route-id="@item.id">Approve</a></td>
+                            @*<td><a class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="ShowPopup('@item.id')">Decline</a></td>*@
+                            <td><a class="btn btn-danger" onclick="ShowPopup('@item.id')">Decline</a></td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <!-- Modal Popup -->
+    <!-- Modal -->
+    <div class="modal fade" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Please provide reason for decline.</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input id="declineReason" name="declineReason" class="form-control" />
+                    <input type="hidden" name="checkReqId" id="checkReqId" value="" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="SendDeclineReason()">Save Reason</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Popup -->    
+
+}
+else
+{
+    <div class="text-center"><b>There is no check request till now</b></div>
+}
+<script type="text/javascript">
+    function ShowPopup(id) {
+        // debugger;
+        $('#checkReqId').val(id);
+        $('#reasonModal').modal({ keyboard: false })       
+    }
+
+    function SendDeclineReason() {
+        id = document.getElementById("checkReqId").value;
+        $.ajax({
+            url: '/Issuer/CheckRequest/Decline',
+            type: "GET",
+            data: {
+                id: id,
+                reason: $('#declineReason').val()
+            },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (error) {
+                console.log(`Error ${error}`);
+            }
+        });
+        $("#declineReason").val("");
+        $('#reasonModal').modal('hide');
+        location.reload();
+    }
+
+</script>

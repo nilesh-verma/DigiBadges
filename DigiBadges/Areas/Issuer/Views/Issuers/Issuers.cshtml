@@ -1,0 +1,136 @@
+﻿@model DigiBadges.Models.ViewModels.IssuerBadge
+
+@{
+    ViewData["Title"] = "Issuers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    //var path = Model.ImagePath;
+    var count = 0;
+
+}
+
+@*<div class="col m-1">
+        <nav aria-label="breadcrumb" class="float-right">
+
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index">Issuers</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.issuer.Name</li>
+            </ol>
+        </nav>
+    </div>*@
+<br />
+
+<hr />
+<div class="container" style="border-style: ridge;">
+    <div class="row">
+        <div class="col-4 text-center" style="border-right:1px solid #bbb9b9;"><img src=@Model.issuer.Image style="width:auto;height:150px" /></div>
+        <div class="col-4">
+            <div class="row m-3">
+                <h4 style="color:blueviolet"> @Model.issuer.Name</h4>
+            </div>
+            <div class="row m-3">
+                @Model.issuer.Description
+            </div>
+            <div class="row m-3">
+                <div class="col-6"> <label>Award :</label> <b>@Model.Badge_Count</b></div>
+                <div class="col-6"> <label>Badge :</label> <b>@Model.badge.Count()</b></div>
+
+            </div>
+
+
+        </div>
+        <div class="col-4 " style="margin-top: 20px;">
+
+            <div class="row">
+                <a class="btn btn-primary" asp-action="Badge">Add Badge</a>
+
+            </div>
+            <div class="row">
+
+            </div>
+            @*<div class="row">
+                    <button class="float-right">B</button>
+                </div>
+                <div class="row">
+                    <button class="float-right">C</button>
+                </div>*@
+        </div>
+    </div>
+</div>
+<hr />
+<hr />
+@*<div class="col "><a class="float-right btn btn-secondary" asp-controller="Issuers" asp-action="Badge" asp-route-id="@Model.Id">Create Badges</a></div>*@
+<br />
+
+
+@if (Model.badge.Count() > 0)
+{
+    <div class="container border border-secondary rounded" style="padding:15px;">
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped" width="100%">
+                    <tr class="table-info">
+
+                        <th>
+                            <label asp-for="@Model.badge.FirstOrDefault().BadgeName"></label>
+                        </th>
+                        <th style="text-align:center;">
+                            <label asp-for="@Model.badge.FirstOrDefault().EarningCriteriaDescription"></label>
+                        </th>
+                        <th style="text-align:center;">
+                            <label asp-for="@Model.badge.FirstOrDefault().ExpiryDuration"></label>
+                        </th>
+
+                        <th style="text-align:center;"></th>
+                    </tr>
+                    @foreach (var item in Model.badge)
+                    {
+                        <tr style="padding:50px;">
+
+                            <td>
+
+                                <img class="step-badge-img float-left" src="@item.ImageUrl" alt="Alternate Text" />
+                                <span class="pl-2">@item.BadgeName</span>
+                            </td>
+                            <td style="text-align:center">
+                                @Html.DisplayFor(c => item.EarningCriteriaDescription)
+                            </td>
+                            <td style="text-align:center">
+                                @Html.DisplayFor(c => item.ExpiryDuration) days
+                            </td>
+
+                            <td style="text-align:center">
+                                <a class="btn btn-success" asp-controller="Issuers" asp-action="ViewBadge" asp-route-id="@item.BadgeId">
+                                    @*<i class="fas fa-trash-alt"></i>*@View
+                                </a>
+                            </td>
+                        </tr>
+
+                    }
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+}
+
+else
+{
+    <div class="text-center"><h4>You have not added any badge yet</h4></div>
+    <div class="text-center"><p>Add badges in order to award the earner on completing their pathway steps.</p></div>
+
+    <br />
+    <div class="row">
+        @*<div class="col-4"></div>*@
+        <div class="col text-center"><a asp-controller="Issuers" asp-action="Badge">Add Badge</a></div>
+        @*<div class="col-4"></div>*@
+    </div>
+    <br />
+    <div class="row">
+        @*<div class="col-3"></div>*@
+        <div class="col text-center "><img src="~/images/badge1.jpg" style="align-content:center;opacity: 0.5;" alt="Issuers" /></div>
+        @*<div class="col-3"></div>*@
+    </div>
+}

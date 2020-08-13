@@ -1,0 +1,74 @@
+﻿@model DigiBadges.Models.ViewModels.LoginVM
+@inject IAuthenticationSchemeProvider SchemeProvider
+@using Microsoft.AspNetCore.Authentication
+    <div class="py-4">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="row form-group">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body px-lg-5 pt-4">
+                        <form id="account" autocomplete="off" method="post" asp-controller="Login" asp-action="Index">
+                            <h3 class="col-12 text-success text-center py-4">
+                                <strong>Sign In</strong>
+                            </h3>
+                            <hr />
+                            <div class="py-2 form-group">
+                                <input asp-for="Email" placeholder="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="py-2 form-group">
+                                <input asp-for="Password" placeholder="Password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <div class="py-2 form-group">
+                                <div class="checkbox">
+                                    <label asp-for="RememberMe">
+                                        <input asp-for="RememberMe" />
+                                        @Html.DisplayNameFor(m => m.RememberMe)
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="py-2">
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </div>
+
+                            <div class="form-group">
+                                <p>
+                                    <a id="forgot-password" asp-area="Identity" asp-page="/Account/ForgotPassword">Forgot your password?</a>
+                                </p>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-md-6">
+                <div class="login-box login-position">
+                    <h3 class="login-social-title"> Login with social providers</h3>
+                    <h6 class="select-list-txt">
+                        Select from the list of available social providers
+                    </h6>
+                    <div class="" role="group">
+                        @foreach (var provider in await SchemeProvider.GetRequestHandlerSchemesAsync())
+                        {
+                            <a class="btn btn-lg btn-default facebook-link"
+                               asp-route-returnUrl="@Context.Request.Query["returnUrl"]"
+                               asp-route-provider="@provider.Name"
+                               asp-action="SignIn"
+                               asp-controller="Login"><i class="fa fa-@provider.Name.ToLower()"></i> @provider.Name</a>
+                        
+                              <br />
+                               }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

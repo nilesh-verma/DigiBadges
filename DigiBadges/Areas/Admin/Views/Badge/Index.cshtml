@@ -1,0 +1,162 @@
+﻿@model DigiBadges.DataAccess.ViewModels.BadgeVM
+@{
+    var title = "All Badges";
+    var item = 0;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+
+@if (TempData["ExceptionMessage"] != null)
+{
+
+    string msg = TempData["ExceptionMessage"].ToString();
+
+    <h5 class="text-danger">@msg</h5>
+}
+else
+{
+    <div class="userRole">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2>@title</h2>
+                    </div>
+                    @* <div class="col-sm-6">
+                            <a asp-controller="Badge" asp-action="Create" class="btn btn-success"><i class="material-icons">&#xe147;</i> <span>Add Badge</span></a>
+                        </div>*@
+
+                    
+                        @*<input type="text" id="txtEmpName" onchange="passTheText()"   placeholder="Input your keyword" autocomplete="off"/>*@
+                    
+                </div>
+            </div>
+            @if (Model.Badge.Count() != 0)
+            {
+                <table class="table table-striped table-hover" id="myTable">
+                    <thead>
+                        <tr>
+                            <th>Items</th>
+                            <th>Name</th>
+                            <th>Icon</th>
+                            <th>Created By</th>
+                            <th>Expiry Duration</th>
+                            <th>Earning Criteria</th>
+                            @* <th>Created Date</th>*@
+                            @* <th>Actions</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var user in Model.Badge)
+                        {
+                            item++;
+
+                            <tr>
+                                <td>@item</td>
+                                <td>
+                                    @user.BadgeName
+                                </td>
+                                <td>
+                                    <img src="@user.ImageUrl" class="step-badge-img float-none" alt="Alternate Text" />
+                                </td>
+                                <td>@user.CreatedBy</td>
+                                <td>@user.ExpiryDuration days</td>
+                                <td>@user.EarningCriteriaDescription</td>
+                                @*   <td>@user.CreatedDate</td>*@
+                                @*  <td>
+                                        <a asp-controller="Badge" class="text-primary" asp-action="BadgeEdit" asp-route-id="@user.Id"><i class="material-icons" title="Edit">&#xE254;</i></a>
+                                        <a asp-controller="Badge" class="text-danger" onclick="return confirm('Do you really want to delete @user.BadgeName ?');" asp-action="BadgeDelete" asp-route-id="@user.Id"><i class="material-icons" title="Delete">&#xE872;</i></a>
+                                    </td>
+                                *@
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="font-weight-bold text-center text-muted">No Badges Found !</p>
+            }
+
+        </div>
+    </div>
+
+}
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    @*<script>
+        $(document).ready(function () {
+            $('#productName').autocomplete({
+                source:  '@Url.Action("Search","Badge")'
+            });
+        });
+        </script>*@
+
+    @*<script>
+
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+
+            });
+
+            $('#myTable_filter input[type=search]').css("border-radius", "10px");
+
+        });
+
+
+
+    </script>*@
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+
+            });
+
+            $('#myTable_filter input[type=search]').css("border-radius", "10px");
+         
+            let time = 0;
+            $('#myTable_filter input[type=search]').on('input', function () {
+                // Reset the timer
+                clearTimeout(time);
+                time = setTimeout(function () {
+                    // enter code here or a execute function.
+                    SearchText();
+
+                }, 200);
+            });
+            
+        });
+       
+        function SearchText() {
+            
+            $("#myTable_filter input[type=search]").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        url: "/Admin/Badge/Search",
+                        data: { 'id': $('#myTable_filter input[type=search]').val()},
+                        dataType: "json",
+                        success: function (data) {
+                            response(data);
+                            console.log($('#myTable_filter input[type=search]').val());
+
+                        },
+                        error: function (result) {
+                          //  alert("No Match");
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

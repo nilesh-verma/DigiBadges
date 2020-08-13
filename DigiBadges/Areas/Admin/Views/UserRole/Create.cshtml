@@ -1,0 +1,41 @@
+﻿@model DigiBadges.Models.UserRoles
+
+@{
+    var title = "Create Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="userRole">
+
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>@title</h2>
+                </div>
+
+            </div>
+        </div>
+
+        <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+
+                        <label asp-for="Role">Role</label>
+                        <input type="text" asp-for="Role" class="form-control" placeholder="Role">
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <a asp-action="Index" class="btn btn-danger m-1">Cancel</a>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success m-1">Create</button>
+                    </div>
+            
+                </div>
+        </form>
+    </div>
+</div>

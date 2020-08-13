@@ -1,0 +1,34 @@
+# A dockerized badgr-server stack for development
+version: '3.3'
+services:  
+ redis_image:
+  image: redis
+  container_name: cachev1    
+  ports:
+   - "6379:6379"
+ solr_image:
+  image: solr:8.5.2
+  container_name: digiSolr
+  ports:
+  - "8983:8983"
+  entrypoint:
+    - bash
+    - "-c"
+    - "precreate-core usercore; precreate-core issuercore; precreate-core badgecore; exec solr -f"
+
+ web:              
+  build:
+   context: .
+   dockerfile: ./DigiBadges/Dockerfile
+  links:
+   - redis_image
+   - solr_image
+  container_name: DotNetCore-Service  
+  restart: always  
+  ports:
+   - "80:80"  
+  environment: 
+      - ASPNETCORE_ENVIRONMENT=Production
+  depends_on:
+   - redis_image
+   - solr_image

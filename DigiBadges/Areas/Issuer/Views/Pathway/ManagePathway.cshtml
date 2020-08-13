@@ -1,0 +1,201 @@
+﻿@model DigiBadges.DataAccess.ViewModels.PathwayCreation
+@{
+    var title = "Manage Pathway";
+    //var count = Convert.ToInt32(TempData["PathwayStepsCount"]);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="userRole">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-3">
+                    <h2>@title</h2>
+                </div>
+              
+                <div class="col-sm-3">
+                    <h2 style="color:antiquewhite">@Model.pathwayName</h2>
+                </div>
+            </div>
+        </div>
+        <form method="post" enctype="multipart/form-data" id="myform">
+            <div class="form-row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input hidden asp-for="pathwaySteps.PathwayId" />
+                <div class="form-group col-md-3">
+                    <label asp-for="pathwaySteps.StepName">Step Name</label>
+                    <input type="text" asp-for="pathwaySteps.StepName" class="form-control" placeholder="Step Name">
+                    <span asp-validation-for="pathwaySteps.StepName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="pathwaySteps.Description">Description</label>
+                    <input type="text" asp-for="pathwaySteps.Description" class="form-control" placeholder="Description">
+                    <span asp-validation-for="pathwaySteps.Description" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="pathwaySteps.Documents">Documents</label>
+                    <input type="file" name="files" id="uploadBox" asp-for="pathwaySteps.Documents" multiple class="form-control" accept=".doc,.docx,.txt" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="pathwaySteps.GetBadges">Badges</label>
+                    <select asp-for="pathwaySteps.GetBadges" class="form-control">
+                        <option selected disabled>Select</option>
+                        @foreach (var badge in Model.GetBadgesinList)
+                        {
+
+                            <option value="@badge.Id" style="background-image:url(@badge.ImageUrl)">
+                                @badge.BadgeName
+
+                        </option>
+                    }
+                    </select>
+                    <span asp-validation-for="pathwaySteps.GetBadges" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" id="submit" class="btn btn-success form-control" disabled>Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model.steps.Count() > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Step Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Uploaded File</th>
+                <th scope="col">Badge</th>
+                <th scope="col">Edit/Delete Step</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var step in Model.steps)
+            {
+            <tr>
+                <td>@step.StepName</td>
+                <td>@step.Description</td>
+                <td>@step.Documents</td>
+                @if (Model.GetBadgesinList.Count() > 0)
+                {
+                    @foreach (var badge in Model.GetBadgesinList)
+                    {
+                        @if (badge.Id.ToString() == step.GetBadges)
+                        {
+                            <td>@badge.BadgeName
+                                <img src="@badge.ImageUrl" class="step-badge-img float-none pl-2" alt="Alternate Text" />
+                            </td>
+                        }
+                    }
+                }
+                <td>
+                    @*<a asp-action="PathwayEdit" asp-route-id="@user.Id"> @user.PathwayName</a> &nbsp;*@
+                    <div class="dropdown">
+                        <button class="dropbtn">
+                            <i class="fas fa-info"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a asp-controller="Pathway" class="text-primary" asp-action="EditPathwaySteps" asp-route-editid="@step.Id"><i class="material-icons" title="Edit">&#xE254;</i>Edit</a>
+                            <a class="text-danger" id="Delete" onclick="DeleteStep('@step.Id')" type="button"><i class="material-icons" title="Delete">&#xE872;</i>Delete</a>
+                        </div>
+                    </div>
+                </td>
+                @*<td><a asp-action="EditPathwaySteps" asp-route-id="@step.Id" class="btn btn-primary">Edit</a></td>
+        <td><a asp-action="DeletePathwaySteps" asp-route-id="@step.Id" class="btn btn-danger">Delete</a></td>*@
+            </tr>
+            }
+        </tbody>
+    </table>
+    <div class="col-md-3" style="padding-left:900px">
+        <a asp-controller="Pathway" asp-action="Index" class="btn btn-success">Finish</a>
+    </div>
+}
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $("#uploadBox").change(function () {
+            var fileName = document.getElementById('uploadBox').value.toLowerCase();
+            var fileUpload = document.getElementById('uploadBox');
+            var size = 0;
+            if (fileUpload.files.length > 0) {
+                size = parseFloat(fileUpload.files[0].size / (1024)).toFixed(5);
+            }
+
+            if (document.getElementById("uploadBox").files.length > 0 && (size != "undefined" || size != null)) {
+                if (!fileName.endsWith('.doc') && !fileName.endsWith('.docx') && !fileName.endsWith('.txt')) {
+                    $("#submit").attr("disabled", true);
+                    swal('Please Upload text or doc file only')
+                }
+                else {
+                    if (fileName.endsWith('.txt') && size > 50) {
+                        $("#submit").attr("disabled", true);
+                        swal('File size is too big!! Maximum size limit is 50KB');
+                    }
+                    else if (fileName.endsWith('.doc') && size > 1000) {
+                        swal('File size is too big!! Maximum size limit is 1MB');
+                    }
+                    else if (fileName.endsWith('.docx') && size > 1000) {
+                        $("#submit").attr("disabled", true);
+                        swal('File size is too big!! Maximum size limit is 1MB');
+                    }
+                    else {
+                        $("#submit").removeAttr("disabled");
+                    }
+                }
+            }
+            else {
+                if (document.getElementById("uploadBox").files.length == 0 || typeof (fileUpload.files) == "undefined") {
+                    swal('Please Select file to upload')
+                    $("#submit").attr("disabled", true);
+                }
+                else {
+                    $("#submit").removeAttr("disabled");
+                }
+            }
+
+        });
+
+        function DeleteStep(delid) {
+            debugger;
+            swal({
+                title: "Are you sure that you want to delete this Step?",
+                type: "warning",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Yes, delete it!",
+                confirmButtonColor: "#ec6c62"
+            },
+                function () {
+                    $.ajax({
+                        url: "/Issuer/Pathway/DeletePathwaySteps",
+                        data:
+                        {
+                            "delid": delid
+                        },
+                        type: "DELETE"
+                    })
+                        .done(function (data) {
+                            sweetAlert
+                                ({
+                                    title: "Deleted!",
+                                    text: "Issuer was successfully deleted!",
+                                    type: "success"
+                                },
+                                    function () {
+                                        // window.location.href = '/Issuer/Pathway/ManagePathway/@Model.PathwayId';
+                                        location.reload();
+                                    });
+                        })
+                        .error(function (data) {
+                            swal("Oops", "We couldn't connect to the server!", "error");
+                        });
+                });
+        }
+
+    </script>
+}
+

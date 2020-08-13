@@ -1,0 +1,20 @@
+﻿@model AppUser
+
+@{
+    ViewBag.Title = "Profile";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>@Model.FirstName</h2>
+        <div class="panel panel-default">
+            @foreach (var claim in Model.Claims)
+            {
+                <div class="panel-heading">
+                    <h3 class="panel-title">@claim.Type</h3>
+                </div>
+                <div class="panel-body">@claim.Value</div>
+            }
+        </div>
+    </div>
+</div>

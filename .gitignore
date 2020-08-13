@@ -1,0 +1,21 @@
+<<<<<<< .mine
+/DigiBadges.DataAccess/bin
+/DigiBadges.DataAccess/obj
+/DigiBadges.Models/bin
+/DigiBadges.Models/obj
+/DigiBadges.Utility/bin
+/DigiBadges.Utility/obj
+/DigiBadgesNew/bin
+/DigiBadgesNew/obj
+=======
+/.vs
+
+
+
+
+
+
+
+>>>>>>> .theirs
+/DigiBadges/bin/Debug/netcoreapp3.1
+/DigiBadges/obj

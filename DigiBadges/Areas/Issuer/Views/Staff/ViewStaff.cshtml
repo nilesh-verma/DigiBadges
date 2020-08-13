@@ -1,0 +1,117 @@
+﻿@model DigiBadges.Models.ViewModels.IssuerBadge
+@*<a class="btn btn-primary float-right " style="margin:8px;" asp-area="Issuer" asp-controller="Staff" asp-action="SelfCreated">Add Self Created</a>
+    <a class="btn btn-primary float-right " style="margin:8px;" asp-area="Issuer" asp-controller="Staff" asp-action="SelfCreated">Add Self Created</a>
+
+
+    <a class="btn btn-primary float-right" style="margin:8px;" asp-area="Issuer" asp-controller="Staff" asp-action="Index" asp-route-id="@ViewBag.issuerid">Add Staff</a>
+*@
+<br />
+<br />
+@if (Model.users.Count() != 0)
+{
+
+    <table class="table table-striped table-hover" id="myTable">
+        <thead >
+            <tr>
+
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Email Id</th>
+                <th>Edit/Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model.users)
+            {
+
+                <tr>
+                    <td>@i.FirstName</td>
+                    <td>@i.LastName</td>
+                    <td>@i.Email</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn">
+                                <i class="fas fa-info"></i>
+                            </button>
+                            <div class="dropdown-content">
+                                <a asp-controller="Staff" class="text-primary" asp-action="EditStaff" asp-route-id="@i.UserId"><i class="material-icons" title="Edit">&#xE254;</i>Edit</a>
+                                @*    <a type="" class="text-danger" onclick="PathwayDelete(@user.Id)"  ><i class="material-icons" title="Delete">&#xE872;</i>Delete</a>
+                                *@
+
+                                <a class="text-danger" id="Delete" onclick="deleteStaff('@i.UserId')" type="button">
+                                    <i class="material-icons" title="Delete">&#xE872;</i>Delete
+                                </a>
+
+                                @*<a class="text-danger" id="Delete" onclick="PathwayDelete('@i.UserId')" type="button">
+                                        <i class="material-icons" title="Delete">&#xE872;</i>Delete
+                                    </a>*@
+
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+}
+else
+{
+    <p class="font-weight-bold text-center text-muted">No Staff Found !</p>
+}
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        function deleteStaff(id) {
+            debugger;
+            swal({
+                title: "Are you sure?",
+                text: "Are you sure that you want to delete this staff?",
+                type: "warning",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Yes, delete it!",
+                confirmButtonColor: "#ec6c62"
+            },
+                function () {
+                    $.ajax({
+                        url: "/Issuer/Staff/DeleteStaff",
+                        data:
+                        {
+                            "id": id
+                        },
+                        type: "DELETE"
+                    })
+                        .done(function (data) {
+                            sweetAlert
+                                ({
+                                    title: "Deleted!",
+                                    text: "Staff was successfully deleted!",
+                                    type: "success"
+                                },
+                                    function () {
+                                        window.location.href = '/Issuer/Staff/ViewStaff';
+                                    });
+                        })
+                        .error(function (data) {
+                            swal("Oops", "We couldn't connect to the server!", "error");
+                        });
+                });
+        }
+
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+
+            });
+
+            $('#myTable_filter input[type=search]').css("border-radius", "10px");
+
+        });
+
+    </script>
+}

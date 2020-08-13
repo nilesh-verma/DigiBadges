@@ -1,0 +1,43 @@
+﻿@model DigiBadges.Models.BadgeCollections
+
+    <h3 class="page-title"> Edit Collection</h3>
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="p-4 border rounded row">
+                <input hidden asp-for="@Model.CollectionId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="col-8">
+                    <div class="form-group row">
+                        <div class="col-4">
+                            <label asp-for="CollectionName"></label>
+                        </div>
+                        <div class="col-8">
+                            <input asp-for="CollectionName" class="form-control" />
+
+                        </div>
+                        <span asp-validation-for="CollectionName" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <div class="col-4">
+                            <label asp-for="CollectionDescription"></label>
+                        </div>
+                        <div class="col-8">
+                            <input asp-for="CollectionDescription" class="form-control" />
+                        </div>
+
+                    </div>
+
+
+
+
+                    <br />
+                    <div class="form-group">
+                        <a asp-action="Index" class="btn btn-danger">Cancle</a>
+
+                        <input type="submit" class="btn btn-primary" value="Update" asp-route-id=@Model.CollectionId />
+                    </div>
+                </div>
+            </div>
+        </form>
