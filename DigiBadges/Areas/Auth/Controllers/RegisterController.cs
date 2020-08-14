@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -162,7 +162,7 @@ namespace DigiBadges.Areas.Auth.Controllers
 
         [Route("Auth/Register/RegisterExternalUser")]
         public async Task<IActionResult> RegisterExternalUser(string returnUrl = null)
-        {            
+        {
             returnUrl = ReturnUrl ?? Url.Content("~/");
             try
             {
@@ -257,6 +257,9 @@ namespace DigiBadges.Areas.Auth.Controllers
 
                 case "Twitter":
                     return GetTwitterClaims();
+
+                case "LinkedIn":
+                    return GetLinkedInClaims();
                 default:
                     return GetFacebookClaims();
             }
@@ -271,6 +274,13 @@ namespace DigiBadges.Areas.Auth.Controllers
         }
 
         private bool GetTwitterClaims()
+        {
+            Email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            FirstName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+            LastName = " ";
+            return true;
+        }
+        private bool GetLinkedInClaims()
         {
             Email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
             FirstName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
