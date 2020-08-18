@@ -24,7 +24,7 @@ namespace DigiBadges.Utility
                 smtp.Host = "smtp.gmail.com"; //for gmail host  
                 smtp.EnableSsl = true;
                 smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential("thisistestuser1244@gmail.com", " Jeet@123");
+                smtp.Credentials = new NetworkCredential("thisistestuser1244@gmail.com", "nskxyfngqxzsmxsi");
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.Send(message);
             }
