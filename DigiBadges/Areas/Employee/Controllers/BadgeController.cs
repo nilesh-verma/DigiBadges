@@ -143,7 +143,10 @@ namespace DigiBadges.Areas.Employee.Controllers
                     }
                     int[] secondsForTotalBadge = add_list.ToArray();
 
-                    await _cache.AddSearchResultsAsync(userid, list, secondsForTotalBadge.Min());
+                    if (list.Count > 0)
+                    {
+                        await _cache.AddSearchResultsAsync(userid, list, secondsForTotalBadge.Min());
+                    }
                     collectionView.BackPacks = list;
 
                 }
